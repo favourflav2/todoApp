@@ -3,10 +3,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from "react-router-dom";
 
 export interface IHomeProps {}
 
 export default function Home(props: IHomeProps) {
+
+    // naviagte
+    const navigate = useNavigate()
 
     // states for sort and category
     const [handleOpenSort, setHandleOpenSort] = React.useState(false)
@@ -17,7 +22,8 @@ export default function Home(props: IHomeProps) {
     <div className="w-full h-auto flex p-10 justify-center items-center">
 
       {/* Content */}
-      <div className="main-content  w-[80%] min-h-[600px] flex  bg-gray-100">
+      <div className="main-content  w-[80%] min-h-[600px] flex flex-col items-center   bg-gray-100">
+
         {/* Search Inputs & Sorting/Filtering */}
         <div className="w-full flex flex-col h-auto">
 
@@ -47,6 +53,14 @@ export default function Home(props: IHomeProps) {
           </div>
 
         </div>
+
+        {/* Add Task */}
+        <div className="addTaskBtn cursor-pointer px-3 py-4 text-white bg-blue-400 flex items-center justify-around w-[150px] my-5 rounded-3xl" onClick={()=>navigate("/addTask")}>
+                <AddIcon />
+                <h1>Add Task</h1>
+        </div>
+
+
       </div>
 
     </div>
