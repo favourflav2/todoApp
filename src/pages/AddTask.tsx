@@ -8,10 +8,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AddIcon from "@mui/icons-material/Add";
 import CheckListCard from "../components/checkListCard/CheckListCard";
-import { Dispatch, UseSelector } from "../redux/store";
+import { Dispatch } from "../redux/store";
 import { addTodo } from "../redux/features/todoSlice";
 import dayjs from 'dayjs';
 import { useNavigate } from "react-router-dom";
+import TagListCard from "../components/checkListCard/TagListCard";
 
 
 export interface IAddTaskProps {}
@@ -20,16 +21,17 @@ interface Todo {
     title: string,
     date: Dayjs | string,
     time: Dayjs | string,
-    priority: string | number,
-    complexity: string | number,
-    percentage: any
+    priority:  number,
+    complexity:  number,
+    percentage: any,
+    checkList: Array<any>;
+    tagList: Array<any>;
 }
 
 export default function AddTask(props: IAddTaskProps) {
   let oneThorughTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   // Redux State
-  const {todos} = UseSelector(state => state.todo)
   const dispatch = Dispatch()
   const navigate = useNavigate()
 
@@ -60,8 +62,10 @@ export default function AddTask(props: IAddTaskProps) {
   const [timeData, setTimeData] = React.useState<Dayjs | null>(null);
 
   // add checklist state
-  const [addCheckList, setAddCheckList] = React.useState<Array<string>>([])
+  const [addCheckList, setAddCheckList] = React.useState<Array<any>>([])
   const [addTagsList, setAddTagsList] = React.useState<Array<string>>([])
+
+
 
   // helper functions
 
@@ -91,7 +95,7 @@ export default function AddTask(props: IAddTaskProps) {
             }
         })
     }else{
-        setAddCheckList((item) => [...item, textState.checkList])
+        setAddCheckList((item) => [...item, {checkList:textState.checkList, completed: false}])
         setTextState(item => {
             return {
                 ...item,
@@ -182,9 +186,11 @@ export default function AddTask(props: IAddTaskProps) {
     title: textState.taskName,
     date: dateData ? dayjs(dateData).format('MM/DD/YYYY')  : "", 
     time:timeData ? dayjs(timeData).format('hh:mm a') : "", 
-    priority: priorityState,
-    complexity: complexityState,
-    percentage: 0
+    priority: Number(priorityState),
+    complexity: Number(complexityState),
+    percentage: 0,
+    checkList: addCheckList,
+    tagList: addTagsList
   }
 
   // React useEffects
@@ -271,6 +277,8 @@ export default function AddTask(props: IAddTaskProps) {
   
 
 //console.log(dayjs('2019-01-25').format('MM/DD/YYYY') )  
+
+
 
 
 
@@ -369,13 +377,13 @@ export default function AddTask(props: IAddTaskProps) {
           {errors.checkList && <p className="text-[11px] text-red-500 ml-2">Please Enter an Check List</p>}
 
           {/* Mapped Data */}
-          <div className="w-full flex flex-col h-auto mt-2">
+           <div className="w-full flex flex-col h-auto mt-2">
             {
                 addCheckList?.map((item:any,index:number)=>(
                     <CheckListCard item={item} index={index} key={index} deleteCheckListItem={deleteCheckListItem}/>
                 ))
             }
-          </div>
+          </div> 
 
 
         </div>
@@ -397,7 +405,7 @@ export default function AddTask(props: IAddTaskProps) {
           <div className="w-full flex flex-col h-auto mt-2">
             {
                 addTagsList?.map((item:any,index:number)=>(
-                    <CheckListCard item={item} index={index} key={index} deleteCheckListItem={deleteTagsListItem}/>
+                    <TagListCard item={item} index={index} key={index} deleteCheckListItem={deleteTagsListItem}/>
                 ))
             }
           </div>

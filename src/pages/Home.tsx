@@ -5,10 +5,17 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
+import { UseSelector } from "../redux/store";
+import TodoCard from "../components/todoCard/TodoCard";
+
+
 
 export interface IHomeProps {}
 
 export default function Home(props: IHomeProps) {
+
+    // Redux States
+    const {todos} = UseSelector(state => state.todo)
 
     // naviagte
     const navigate = useNavigate()
@@ -17,12 +24,14 @@ export default function Home(props: IHomeProps) {
     const [handleOpenSort, setHandleOpenSort] = React.useState(false)
     const [handleOpenCategory, setHandleOpenCategory] = React.useState(false)
 
+    
+
 
   return (
-    <div className="w-full h-auto flex p-10 justify-center items-center">
+    <div className="w-full min-h-screen flex p-10 justify-center items-center bg-gray-200">
 
       {/* Content */}
-      <div className="main-content  w-[80%] min-h-[600px] flex flex-col items-center   bg-gray-100">
+      <div className="main-content  w-[80%] min-h-[600px] flex flex-col items-center   ">
 
         {/* Search Inputs & Sorting/Filtering */}
         <div className="w-full flex flex-col h-auto">
@@ -52,6 +61,15 @@ export default function Home(props: IHomeProps) {
 
           </div>
 
+        </div>
+
+        {/* Mapped Data */}
+        <div className="w-full h-auto flex flex-col">
+            {
+                todos?.map((item:any,index:number)=>(
+                    <TodoCard item={item} key={index} id={index}/>
+                ))
+            }
         </div>
 
         {/* Add Task */}

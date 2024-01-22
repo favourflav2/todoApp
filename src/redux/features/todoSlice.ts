@@ -2,12 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { Dayjs } from "dayjs";
 
 interface Todo {
-    title: string,
-    date: Dayjs | string,
-    time: Dayjs | string,
-    priority: string | number,
-    complexity: string | number,
-    percentage: any
+    title: string;
+    date:  string;
+    time:  string;
+    priority:  number;
+    complexity:  number;
+    percentage: any;
+    checkList: Array<number | string>;
+    tagList: Array<number | string>;
 }
 
 interface TodoAppState {
