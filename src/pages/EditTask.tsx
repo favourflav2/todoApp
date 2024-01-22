@@ -17,15 +17,16 @@ import TagListCard from "../components/checkListCard/TagListCard";
 export interface IEditTaskProps {}
 
 interface Todo {
-  title: string;
-  date: Dayjs | string;
-  time: Dayjs | string;
-  priority: number;
-  complexity: number;
-  percentage: any;
-  checkList: Array<any>;
-  tagList: Array<any>;
-  fullDate: string
+    title: string;
+    date: string;
+    time: string;
+    priority: number;
+    complexity: number;
+    percentage: any;
+    checkList: Array<any>;
+    tagList: Array<number | string>;
+    fullDate:string;
+    isDone: boolean
 }
 
 export default function EditTask(props: IEditTaskProps) {
@@ -196,7 +197,8 @@ export default function EditTask(props: IEditTaskProps) {
     percentage: 0,
     checkList: addCheckList,
     tagList: addTagsList,
-    fullDate: dateData && timeData ? dayjs(`${newDate} ${newTime}`).format() : ""
+    fullDate: dateData && timeData ? dayjs(`${newDate} ${newTime}`).format() : "",
+    isDone: data ? data.isDone : false
   };
 
   // React useEffects

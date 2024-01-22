@@ -10,7 +10,8 @@ interface Todo {
   percentage: any;
   checkList: Array<any>;
   tagList: Array<number | string>;
-  fullDate:string
+  fullDate:string;
+  isDone:boolean
 }
 
 interface TodoAppState {
@@ -76,9 +77,16 @@ const todoSlice = createSlice({
     editTodo: (state,action) => {
         //console.log(action.payload)
         state.todos[action.payload.id] = action.payload.data
+    },
+    completeTask: (state,action) => {
+        let {id, item} = action.payload
+        
+        state.todos[id].isDone = !state.todos[id].isDone
+        
+        
     }
   },
 });
 
 export default todoSlice.reducer;
-export const { addTodo, checkOffTodo, deleteTodo, resetCheckOffTodo, editTodo } = todoSlice.actions;
+export const { addTodo, checkOffTodo, deleteTodo, resetCheckOffTodo, editTodo, completeTask } = todoSlice.actions;

@@ -11,6 +11,8 @@ import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CircularProgress, { CircularProgressProps } from "@mui/material/CircularProgress";
 import { Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { Dispatch } from "../../redux/store";
+import { completeTask } from "../../redux/features/todoSlice";
 
 export interface IItemDetailsTodoCardProps {
   item: {
@@ -22,6 +24,7 @@ export interface IItemDetailsTodoCardProps {
     percentage: any;
     checkList: Array<number | string>;
     tagList: Array<number | string>;
+    isDone:boolean
   };
   id: number;
 }
@@ -29,6 +32,7 @@ export interface IItemDetailsTodoCardProps {
 export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardProps) {
 
     const navigate = useNavigate()
+    const dispatch = Dispatch()
 
   // Current Date
   let today = new Date();
@@ -94,7 +98,7 @@ export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardPr
         {/* Right Side */}
         <div className="w-full flex items-center justify-end">
           <EditNoteIcon className="mr-2 text-[30px] text-gray-500" onClick={()=>navigate(`/editTask/${id}`)}/>
-          <CheckCircleIcon className="mr-2 text-[30px] text-gray-500" />
+          <CheckCircleIcon className={`mr-2 text-[30px] ${item?.isDone ? 'text-blue-400': 'text-gray-500'}`} onClick={()=>dispatch(completeTask({item,id}))} />
         </div>
       </div>
 
@@ -105,7 +109,7 @@ export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardPr
           <h1>
             Due Date:{" "}
             <span className={`${timeDiff === 0 ? "text-red-500" : timeDiff <= 3 ? "text-orange-500" : "text-blue-500"} font-semibold`}>
-              {timeDiff === 0 ? "Today" : timeDiff <= 3 ? `This ${dayjs(item?.date).format("dddd")}` : dayjs(item?.date).format("MMMM D, YYYY")} at {item?.time}
+              {timeDiff === 0 ? ` ${dayjs(item?.date).format("dddd")}` : timeDiff <= 3 ? `This ${dayjs(item?.date).format("dddd")}` : dayjs(item?.date).format("MMMM D, YYYY")} at {item?.time}
             </span>
           </h1>
         </div>
