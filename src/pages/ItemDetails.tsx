@@ -32,9 +32,9 @@ export default function ItemDetails (props: IItemDetailsProps) {
 
         {/* Title */}
         <div className='flex items-center justify-between w-full'>
-            <ArrowBackIcon className='text-[28px]' onClick={()=>navigate("/")}/>
+            <ArrowBackIcon className='text-[28px]' onClick={()=>navigate(-1)}/>
             <h1 className="title text-[28px] font-medium">Task Details</h1>
-            <EditNoteIcon className='text-[28px]'/>
+            <EditNoteIcon className='text-[28px]' onClick={()=> navigate(`/editTask/${id}`)}/>
         </div>
 
         {/* Todo Card */}

@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dayjs } from "dayjs";
+
 import dayjs from "dayjs";
-import { UseSelector } from "../../redux/store";
+
 import CircleIcon from "@mui/icons-material/Circle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -27,6 +27,9 @@ export interface IItemDetailsTodoCardProps {
 }
 
 export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardProps) {
+
+    const navigate = useNavigate()
+
   // Current Date
   let today = new Date();
   let timeDiff = dayjs(item?.date).diff(today, "day");
@@ -90,7 +93,7 @@ export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardPr
 
         {/* Right Side */}
         <div className="w-full flex items-center justify-end">
-          <EditNoteIcon className="mr-2 text-[30px] text-gray-500" />
+          <EditNoteIcon className="mr-2 text-[30px] text-gray-500" onClick={()=>navigate(`/editTask/${id}`)}/>
           <CheckCircleIcon className="mr-2 text-[30px] text-gray-500" />
         </div>
       </div>

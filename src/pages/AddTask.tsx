@@ -26,6 +26,7 @@ interface Todo {
     percentage: any,
     checkList: Array<any>;
     tagList: Array<any>;
+    fullDate: Dayjs | string
 }
 
 export default function AddTask(props: IAddTaskProps) {
@@ -181,16 +182,20 @@ export default function AddTask(props: IAddTaskProps) {
     }
   }
 
+  let newDate = dayjs(dateData).format('MM/DD/YYYY')
+  let newTime = dayjs(timeData).format('hh:mm a')
+
   // Obj Todo Pushed into Array
   const todoObj:Todo = {
     title: textState.taskName,
     date: dateData ? dayjs(dateData).format('MM/DD/YYYY')  : "", 
-    time:timeData ? dayjs(timeData).format('hh:mm a') : "", 
+    time:timeData ? dayjs(timeData).format('h:mm a') : "", 
     priority: Number(priorityState),
     complexity: Number(complexityState),
     percentage: 0,
     checkList: addCheckList,
-    tagList: addTagsList
+    tagList: addTagsList,
+    fullDate: dateData && timeData ? dayjs(`${newDate} ${newTime}`).format() : ""
   }
 
   // React useEffects

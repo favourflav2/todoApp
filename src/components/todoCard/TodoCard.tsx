@@ -1,7 +1,7 @@
 import * as React from "react";
-import { Dayjs } from "dayjs";
+
 import dayjs from "dayjs";
-import { UseSelector } from "../../redux/store";
+
 import CircleIcon from "@mui/icons-material/Circle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -9,7 +9,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import CircularProgress, { CircularProgressProps } from "@mui/material/CircularProgress";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Tooltip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export interface ITodoCardProps {
@@ -23,15 +23,14 @@ export interface ITodoCardProps {
     checkList: Array<number | string>;
     tagList: Array<number | string>;
   };
-  id:number
+  id: number;
 }
 
 export default function TodosCard({ item, id }: ITodoCardProps) {
   // Redux States
-  const { todos } = UseSelector((state) => state.todo);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  
+ 
 
   // Current Date
   let today = new Date();
@@ -48,22 +47,20 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
     }
   }
 
-  function getPercentages(arr:Array<any>){
-    let highNum = 0
-    let checkedTask = 0
+  function getPercentages(arr: Array<any>) {
+    let highNum = 0;
+    let checkedTask = 0;
 
-    for(let item of arr){
-        if(item.completed === true){
-            checkedTask ++
-        }
-        highNum ++
+    for (let item of arr) {
+      if (item.completed === true) {
+        checkedTask++;
+      }
+      highNum++;
     }
 
-    let percentage = Number(((checkedTask / highNum) * 100).toFixed())
+    let percentage = Number(((checkedTask / highNum) * 100).toFixed());
 
-    return percentage
-
-
+    return percentage;
   }
   function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
     return (
@@ -87,12 +84,8 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
     );
   }
 
-  
-  
   return (
-    <div className="w-full flex flex-col h-auto rounded-2xl bg-white p-4 my-3 border border-gray-200 relative" onClick={()=>{
-        navigate(`/item/${id}`)
-    }}>
+    <div className="w-full flex flex-col h-auto rounded-2xl bg-white p-4 my-3 border border-gray-200 relative">
       {/* 1st Row */}
       <div className=" w-full flex items-center justify-between mb-3">
         {/* Left Side Title */}
@@ -103,13 +96,19 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
 
         {/* Right Side */}
         <div className="w-full flex items-center justify-end">
-          <EditNoteIcon className="mr-2 text-[30px] text-gray-500" />
+          <EditNoteIcon className="mr-2 text-[30px] text-gray-500 " onClick={() => navigate(`/editTask/${id}`)} />
           <CheckCircleIcon className="mr-2 text-[30px] text-gray-500" />
         </div>
       </div>
 
       {/* 2nd Box */}
-      <div className="w-full flex flex-col h-auto ">
+      <Tooltip title={<Typography className="text-[11px]">To Item Details</Typography>}>
+      <div
+        className="w-full flex flex-col h-auto "
+        onClick={() => {
+          navigate(`/item/${id}`);
+        }}
+      >
         <div className="w-full flex items-center my-1">
           <CalendarMonthIcon className="text-[25px] mr-1" />
           <h1>
@@ -139,26 +138,37 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
             </span>
           </h1>
         </div>
-
-        
-
-
       </div>
+      </Tooltip>
 
       {/* 3rd Box */}
-      <div className="w-full flex items-center my-1">
-        {
-            item?.tagList?.map((item:any,index:number)=>(
-                <div key={index} className="mx-2 bg-blue-200 p-1 rounded-3xl px-2 text-[13px]">
-                    <p>{item}</p>
-                </div>
-            ))
-        }
+      <Tooltip title={<Typography className="text-[11px]">To Item Details</Typography>}>
+      <div
+        className="w-full flex items-center my-1"
+        onClick={() => {
+          navigate(`/item/${id}`);
+        }}
+      >
+        {item?.tagList?.map((item: any, index: number) => (
+          <div key={index} className="mx-2 bg-blue-200 p-1 rounded-3xl px-2 text-[13px]">
+            <p>{item}</p>
+          </div>
+        ))}
       </div>
+      </Tooltip>
 
-      <div className=" absolute right-[16px] bottom-1">
+      <Tooltip title={<Typography className="text-[11px]">To Item Details</Typography>}>
+      <div
+        className=" absolute right-[16px] bottom-1"
+        onClick={() => {
+          navigate(`/item/${id}`);
+        }}
+      >
         <CircularProgressWithLabel value={isNaN(getPercentages(item?.checkList)) ? 0 : getPercentages(item?.checkList)} />
       </div>
+      </Tooltip>
     </div>
   );
 }
+
+

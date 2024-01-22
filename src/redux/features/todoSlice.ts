@@ -1,5 +1,5 @@
 import { createSlice, current } from "@reduxjs/toolkit";
-import { Dayjs } from "dayjs";
+
 
 interface Todo {
   title: string;
@@ -10,6 +10,7 @@ interface Todo {
   percentage: any;
   checkList: Array<any>;
   tagList: Array<number | string>;
+  fullDate:string
 }
 
 interface TodoAppState {
@@ -73,10 +74,11 @@ const todoSlice = createSlice({
       state.todos[action.payload.idOfTodo].checkList = updatedItem;
     },
     editTodo: (state,action) => {
-        
+        //console.log(action.payload)
+        state.todos[action.payload.id] = action.payload.data
     }
   },
 });
 
 export default todoSlice.reducer;
-export const { addTodo, checkOffTodo, deleteTodo, resetCheckOffTodo } = todoSlice.actions;
+export const { addTodo, checkOffTodo, deleteTodo, resetCheckOffTodo, editTodo } = todoSlice.actions;

@@ -1,8 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter,  Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import AddTask from './pages/AddTask';
 import ItemDetails from './pages/ItemDetails';
+import EditTask from './pages/EditTask';
 
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/addTask' element={<AddTask />} />
           <Route path='/item/:id' element={<ItemDetails />} />
+          <Route path='/editTask/:id' element={<EditTask />} />
         </Routes>
       </BrowserRouter>
     </>
