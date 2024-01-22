@@ -8,11 +8,30 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AddIcon from "@mui/icons-material/Add";
 import CheckListCard from "../components/checkListCard/CheckListCard";
+import { Dispatch, UseSelector } from "../redux/store";
+import { addTodo } from "../redux/features/todoSlice";
+import dayjs from 'dayjs';
+import { useNavigate } from "react-router-dom";
+
 
 export interface IAddTaskProps {}
 
+interface Todo {
+    title: string,
+    date: Dayjs | string,
+    time: Dayjs | string,
+    priority: string | number,
+    complexity: string | number,
+    percentage: any
+}
+
 export default function AddTask(props: IAddTaskProps) {
   let oneThorughTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+  // Redux State
+  const {todos} = UseSelector(state => state.todo)
+  const dispatch = Dispatch()
+  const navigate = useNavigate()
 
   // state for typing
   const [textState, setTextState] = React.useState({
@@ -21,11 +40,19 @@ export default function AddTask(props: IAddTaskProps) {
     addTags:""
   })
 
+  // Priortiy and Complexity State
+  const [priorityState, setPriority] = React.useState<number | string>("")
+  const [complexityState, setComplexity] = React.useState<number | string>("")
+
   // error state
   const [errors, setErrors] = React.useState({
     taskName:false,
     checkList:false,
-    addTags:false
+    addTags:false,
+    date:false,
+    time:false,
+    priority:false,
+    complexity:false
   })
 
   // date and time state
@@ -100,6 +127,66 @@ export default function AddTask(props: IAddTaskProps) {
     setAddTagsList(res)
   }
 
+  function addToArrayTodo(){
+
+    if(textState.taskName && timeData && dateData && priorityState && complexityState){
+        dispatch(addTodo(todoObj))
+        navigate("/")
+    }
+
+
+    if(!textState.taskName.length){
+        setErrors(item => {
+            return {
+                ...item,
+                taskName:true
+            }
+        })
+    }
+     if(!timeData){
+        setErrors(item => {
+            return {
+                ...item,
+                time:true
+            }
+        })
+    }
+     if(!dateData){
+        setErrors(item => {
+            return {
+                ...item,
+                date:true
+            }
+        })
+    }
+    if(!priorityState){
+        setErrors(item => {
+            return {
+                ...item,
+                priority:true
+            }
+        })
+    }
+    if(!complexityState){
+        setErrors(item => {
+            return {
+                ...item,
+                complexity:true
+            }
+        })
+    }
+  }
+
+  // Obj Todo Pushed into Array
+  const todoObj:Todo = {
+    title: textState.taskName,
+    date: dateData ? dayjs(dateData).format('MM/DD/YYYY')  : "", 
+    time:timeData ? dayjs(timeData).format('hh:mm a') : "", 
+    priority: priorityState,
+    complexity: complexityState,
+    percentage: 0
+  }
+
   // React useEffects
 
   React.useEffect(()=>{
@@ -124,17 +211,76 @@ export default function AddTask(props: IAddTaskProps) {
             })
         }
     }
-  },[errors,textState])
+
+    if(errors.taskName === true){
+        if(textState.taskName.length){
+            setErrors(item => {
+                return {
+                    ...item,
+                    taskName:false,
+                }
+            })
+        }
+    }
+
+    if(errors.priority === true){
+        if(priorityState){
+            setErrors(item => {
+                return {
+                    ...item,
+                    priority:false,
+                }
+            })
+        }
+    }
+
+    if(errors.complexity === true){
+        if(complexityState){
+            setErrors(item => {
+                return {
+                    ...item,
+                    complexity:false,
+                }
+            })
+        }
+    }
+
+    if(errors.date === true){
+        if(dateData){
+            setErrors(item => {
+                return {
+                    ...item,
+                    date:false,
+                }
+            })
+        }
+    }
+
+    if(errors.time === true){
+        if(timeData){
+            setErrors(item => {
+                return {
+                    ...item,
+                    time:false,
+                }
+            })
+        }
+    }
+  },[errors,textState,priorityState,complexityState,dateData,timeData])
+  
+  
+
+//console.log(dayjs('2019-01-25').format('MM/DD/YYYY') )  
 
 
 
  
   return (
-    <div className="w-full flex h-screen p-10 justify-center  bg-gray-100">
+    <div className="w-full flex h-auto p-10 justify-center  bg-gray-200">
 
 
       {/* Content */}
-      <div className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col  ">
+      <div className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col ">
         {/* Title */}
         <div className="flex justify-center items-center relative w-full">
           <h1 className="title text-[28px] font-medium">Add New Task</h1>
@@ -145,31 +291,43 @@ export default function AddTask(props: IAddTaskProps) {
         {/* Name */}
         <div className="w-full h-auto flex flex-col mt-10">
           <h1 className="font-medium text-[17px]">Task Name</h1>
-          <input type="text" name="taskName" value={textState.taskName} className=" outline-none border border-gray-300 rounded-3xl h-[50px] mt-2 indent-3" onChange={(e)=>handleChange(e)}/>
+          <input type="text" name="taskName" value={textState.taskName} className={`outline-none border ${errors.taskName ? 'border-red-500':'border-gray-300'} rounded-3xl h-[50px] mt-2 indent-3`} onChange={(e)=>handleChange(e)}/>
+          {errors.taskName && <p className="ml-2 text-[11px] text-red-500">Please Add A Name</p>}
         </div>
 
         {/* Priority Level */}
         <div className="w-full flex flex-col mt-8">
-          <h1 className="font-medium text-[17px]">Select Priority Level</h1>
+          <h1 className={`font-medium text-[17px] ${errors.priority ? 'text-red-500':''}`}>Select Priority Level</h1>
 
           {/* Mapped Data */}
-          <div className="flex items-center w-full h-auto mt-2">
+          <div className="flex items-center justify-between w-full h-auto mt-2">
             {oneThorughTen?.map((item: number, index: number) => (
-              <div key={index} className={`${index === oneThorughTen.length - 1 ? 'mr-0' : 'mr-6'} bg-blue-200 flex justify-center items-center rounded-full w-[35px] h-[35px]`}>{item}</div>
+              <div key={index} className={` ${priorityState === index + 1 ? 'bg-blue-500 text-white': 'bg-blue-300'} cursor-pointer bg-blue-200 flex justify-center items-center rounded-full w-[35px] h-[35px]`}
+              onClick={()=>{
+                if(index + 1 === item){
+                    setPriority(item)
+                }
+              }}>{item}</div>
             ))}
           </div>
+          {errors.priority && <p className="ml-2 text-[11px] mt-1 text-red-500">Please Select A Number</p>}
         </div>
 
         {/* Complexity Level */}
         <div className="w-full flex flex-col mt-8">
-          <h1 className="font-medium text-[17px]">Select Complexity Level</h1>
+          <h1 className={`font-medium text-[17px] ${errors.complexity ? 'text-red-500':''}`}>Select Complexity Level</h1>
 
           {/* Mapped Data */}
-          <div className="flex items-center w-full h-auto mt-2">
+          <div className="flex items-center justify-between w-full h-auto mt-2">
             {oneThorughTen?.map((item: number, index: number) => (
-              <div key={index} className={`${index === oneThorughTen.length - 1 ? 'mr-0' : 'mr-6'} bg-blue-200 flex justify-center items-center rounded-full w-[35px] h-[35px]`}>{item}</div>
+              <div key={index} className={` ${complexityState === index + 1 ? 'bg-blue-500 text-white': 'bg-blue-300'} cursor-pointer flex justify-center items-center rounded-full w-[35px] h-[35px]`} onClick={()=>{
+                if(index + 1 === item){
+                    setComplexity(item)
+                }
+              }}>{item}</div>
             ))}
           </div>
+          {errors.complexity && <p className="ml-2 text-[11px] mt-1 text-red-500">Please Select A Number</p>}
         </div>
 
         {/* Date and Time */}
@@ -179,9 +337,10 @@ export default function AddTask(props: IAddTaskProps) {
             <h1>Select Due Date</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
-                <DatePicker value={dateData} onChange={(newValue) => setDateData(newValue)} disablePast />
+                <DatePicker value={dateData}  onChange={(newValue) => setDateData(newValue)} disablePast className={`${errors.date ? 'bg-red-200':''}`}/>
               </DemoContainer>
             </LocalizationProvider>
+            {errors.date && <p className="ml-2 text-[11px] text-red-500">Please Add A Date</p>}
           </div>
 
           {/* Time */}
@@ -189,9 +348,10 @@ export default function AddTask(props: IAddTaskProps) {
             <h1>Select Time</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["TimePicker"]}>
-                <TimePicker value={timeData} onChange={(newValue) => setTimeData(newValue)} />
+                <TimePicker value={timeData} onChange={(newValue) => setTimeData(newValue)} className={`${errors.time ? 'bg-red-200':''}`}/>
               </DemoContainer>
             </LocalizationProvider>
+            {errors.time && <p className="ml-2 text-[11px] text-red-500">Please Add A Time</p>}
           </div>
         </div>
 
@@ -246,8 +406,8 @@ export default function AddTask(props: IAddTaskProps) {
         </div>
 
 
-        <div className="w-full flex justify-center items-center">
-        <button className="mt-8 w-[50%] h-[45px] bg-blue-400 rounded-full ">Save Task</button>
+        <div className="w-full flex justify-center items-center mb-[50px]">
+        <button className="mt-8 w-[50%] h-[45px] bg-blue-400 rounded-full " onClick={addToArrayTodo}>Save Task</button>
         </div>
 
 
