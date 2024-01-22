@@ -12,7 +12,7 @@ import CircularProgress, { CircularProgressProps } from "@mui/material/CircularP
 import { Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-export interface ITodoCardProps {
+export interface IItemDetailsTodoCardProps {
   item: {
     title: string;
     date: string;
@@ -23,16 +23,10 @@ export interface ITodoCardProps {
     checkList: Array<number | string>;
     tagList: Array<number | string>;
   };
-  id:number
+  id: number;
 }
 
-export default function TodosCard({ item, id }: ITodoCardProps) {
-  // Redux States
-  const { todos } = UseSelector((state) => state.todo);
-  const navigate = useNavigate()
-
-  
-
+export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardProps) {
   // Current Date
   let today = new Date();
   let timeDiff = dayjs(item?.date).diff(today, "day");
@@ -48,22 +42,20 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
     }
   }
 
-  function getPercentages(arr:Array<any>){
-    let highNum = 0
-    let checkedTask = 0
+  function getPercentages(arr: Array<any>) {
+    let highNum = 0;
+    let checkedTask = 0;
 
-    for(let item of arr){
-        if(item.completed === true){
-            checkedTask ++
-        }
-        highNum ++
+    for (let item of arr) {
+      if (item.completed === true) {
+        checkedTask++;
+      }
+      highNum++;
     }
 
-    let percentage = Number(((checkedTask / highNum) * 100).toFixed())
+    let percentage = Number(((checkedTask / highNum) * 100).toFixed());
 
-    return percentage
-
-
+    return percentage;
   }
   function CircularProgressWithLabel(props: CircularProgressProps & { value: number }) {
     return (
@@ -86,13 +78,8 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
       </Box>
     );
   }
-
-  
-  
   return (
-    <div className="w-full flex flex-col h-auto rounded-2xl bg-white p-4 my-3 border border-gray-200 relative" onClick={()=>{
-        navigate(`/item/${id}`)
-    }}>
+    <div className="w-full flex flex-col h-auto rounded-2xl bg-white p-4 my-3 border border-gray-200 relative">
       {/* 1st Row */}
       <div className=" w-full flex items-center justify-between mb-3">
         {/* Left Side Title */}
@@ -110,7 +97,7 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
 
       {/* 2nd Box */}
       <div className="w-full flex flex-col h-auto ">
-        <div className="w-full flex items-center my-1">
+        <div className="w-full flex items-center my-2">
           <CalendarMonthIcon className="text-[25px] mr-1" />
           <h1>
             Due Date:{" "}
@@ -120,7 +107,7 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
           </h1>
         </div>
 
-        <div className="w-full flex items-center my-1">
+        <div className="w-full flex items-center my-2">
           <ArrowUpwardIcon className="text-[25px] mr-1" />
           <h1>
             Priority:{" "}
@@ -130,7 +117,7 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
           </h1>
         </div>
 
-        <div className="w-full flex items-center my-1 ">
+        <div className="w-full flex items-center my-2 ">
           <QueryStatsIcon className="text-[25px] mr-1" />
           <h1>
             Complexity:{" "}
@@ -139,21 +126,15 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
             </span>
           </h1>
         </div>
-
-        
-
-
       </div>
 
       {/* 3rd Box */}
-      <div className="w-full flex items-center my-1">
-        {
-            item?.tagList?.map((item:any,index:number)=>(
-                <div key={index} className="mx-2 bg-blue-200 p-1 rounded-3xl px-2 text-[13px]">
-                    <p>{item}</p>
-                </div>
-            ))
-        }
+      <div className="w-full flex items-center my-2">
+        {item?.tagList?.map((item: any, index: number) => (
+          <div key={index} className="mx-2 bg-blue-200 p-1 rounded-3xl px-2 text-[13px]">
+            <p>{item}</p>
+          </div>
+        ))}
       </div>
 
       <div className=" absolute right-[16px] bottom-1">
