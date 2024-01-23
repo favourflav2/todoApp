@@ -24,7 +24,8 @@ export interface IItemDetailsTodoCardProps {
     percentage: any;
     checkList: Array<number | string>;
     tagList: Array<number | string>;
-    isDone:boolean
+    isDone:boolean;
+    createdAt: string;
   };
   id: number;
 }

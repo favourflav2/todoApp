@@ -27,7 +27,8 @@ interface Todo {
     checkList: Array<any>;
     tagList: Array<number | string>;
     fullDate:string;
-    isDone:boolean
+    isDone:boolean;
+    createdAt: string;
 }
 
 export default function AddTask(props: IAddTaskProps) {
@@ -184,7 +185,11 @@ export default function AddTask(props: IAddTaskProps) {
   }
 
   let newDate = dayjs(dateData).format('MM/DD/YYYY')
+  let currentDate = new Date()
   let newTime = dayjs(timeData).format('hh:mm a')
+  // Year - Month - Hour - Minute - seconds - The offset from UTC, ±HH:mm
+  let createNewDate = dayjs(currentDate).format("YYYY-MM-DDTHH:mm:ssaZ[Z]")
+  
 
   // Obj Todo Pushed into Array
   const todoObj:Todo = {
@@ -197,7 +202,8 @@ export default function AddTask(props: IAddTaskProps) {
     checkList: addCheckList,
     tagList: addTagsList,
     fullDate: dateData && timeData ? dayjs(`${newDate} ${newTime}`).format() : "",
-    isDone: false
+    isDone: false,
+    createdAt: createNewDate
   }
 
   // React useEffects

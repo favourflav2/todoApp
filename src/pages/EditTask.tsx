@@ -26,7 +26,8 @@ interface Todo {
     checkList: Array<any>;
     tagList: Array<number | string>;
     fullDate:string;
-    isDone: boolean
+    isDone: boolean;
+    createdAt: string;
 }
 
 export default function EditTask(props: IEditTaskProps) {
@@ -198,7 +199,8 @@ export default function EditTask(props: IEditTaskProps) {
     checkList: addCheckList,
     tagList: addTagsList,
     fullDate: dateData && timeData ? dayjs(`${newDate} ${newTime}`).format() : "",
-    isDone: data ? data.isDone : false
+    isDone: data ? data.isDone : false,
+    createdAt: data ? data?.createdAt : ""
   };
 
   // React useEffects
@@ -289,7 +291,7 @@ export default function EditTask(props: IEditTaskProps) {
         <div className="flex justify-center items-center relative w-full">
           <h1 className="title text-[28px] font-medium">Edit Task</h1>
 
-          <ArrowBackIcon className=" absolute left-0 text-[30px]" onClick={()=>navigate(-1)}/>
+          <ArrowBackIcon className=" absolute left-0 text-[30px] cursor-pointer" onClick={()=>navigate(-1)}/>
         </div>
 
         {/* Name */}

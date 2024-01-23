@@ -24,7 +24,8 @@ export interface ITodoCardProps {
     percentage: any;
     checkList: Array<number | string>;
     tagList: Array<number | string>;
-    isDone: boolean
+    isDone: boolean;
+    createdAt: string;
   };
   id: number;
 }
@@ -103,7 +104,10 @@ export default function TodosCard({ item, id }: ITodoCardProps) {
         {/* Right Side */}
         <div className="w-full flex items-center justify-end">
           <EditNoteIcon className="mr-2 text-[30px] text-gray-500 " onClick={() => navigate(`/editTask/${id}`)} />
-          <CheckCircleIcon className={`mr-2 text-[30px] ${item?.isDone ? 'text-blue-400': 'text-gray-500'}`} onClick={()=>dispatch(completeTask({item,id}))}/>
+          <CheckCircleIcon className={`mr-2 text-[30px] ${item?.isDone ? 'text-blue-400': 'text-gray-500'}`} onClick={()=>{
+            dispatch(completeTask({item,id}))
+            
+          }}/>
         </div>
       </div>
 
