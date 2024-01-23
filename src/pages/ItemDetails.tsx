@@ -7,11 +7,11 @@ import ItemDetailsTodoCard from '../components/todoCard/ItemDetailsTodoCard';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import { checkOffTodo, deleteTodo, resetCheckOffTodo } from '../redux/features/todoSlice';
+import { motion } from "framer-motion";
 
-export interface IItemDetailsProps {
-}
 
-export default function ItemDetails (props: IItemDetailsProps) {
+
+export default function ItemDetails () {
 
     // Redux state
     const {todos} = UseSelector(state => state.todo)
@@ -20,15 +20,17 @@ export default function ItemDetails (props: IItemDetailsProps) {
     const data = todos.find((item,index) => Number(index) === Number(id))
     const navigate = useNavigate()
 
+    
+
   
 
     
     
     //console.log(id)
   return (
-    <div className='w-full min-h-screen bg-gray-200 flex justify-center p-10'>
+    <div className='w-full min-h-screen bg-gray-200 flex justify-center p-10' >
       {/* Main Content */}
-      <div className='main-content flex flex-col w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] '>
+      <motion.div className='main-content flex flex-col w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] ' initial={{ x: 300 }} animate={{ x: 0 }} transition={{ duration: 0.6, type: "spring"}}>
 
         {/* Title */}
         <div className='flex items-center justify-between w-full'>
@@ -50,7 +52,12 @@ export default function ItemDetails (props: IItemDetailsProps) {
                 data?.checkList?.length ? 
                 (
                     data?.checkList?.map((item:any,index:number)=>(
-                        <div key={index} className='w-full flex justify-between items-center px-4 rounded-3xl border border-gray-300 my-1 bg-white h-[50px]'>
+                        <div 
+                        
+                        key={index} 
+                        className='w-full flex justify-between items-center px-4 rounded-3xl border border-gray-300 my-1 bg-white h-[50px]'
+                        
+                        >
                             <h1>{item.checkList}</h1>
     
                             {
@@ -58,12 +65,14 @@ export default function ItemDetails (props: IItemDetailsProps) {
                                 (
                                     <CheckBoxIcon className='text-blue-400' onClick={()=>{
                                         dispatch(checkOffTodo({item:item,index,idOfTodo:Number(id)}))
+                                        
                                     }}/>
                                 ) 
                                 : 
                                 (
                                     <CheckBoxOutlineBlankIcon className='text-blue-400' onClick={()=>{
                                         dispatch(checkOffTodo({item:item,index,idOfTodo:Number(id)}))
+                                        
                                     }}/>
                                 )
     
@@ -84,6 +93,7 @@ export default function ItemDetails (props: IItemDetailsProps) {
         <div className='w-full flex flex-col mt-5'>
         {data?.checkList?.length ? <button className='bg-blue-500 rounded-full my-2 p-4 text-white font-bold' onClick={()=>{
             dispatch(resetCheckOffTodo({item:data?.checkList,idOfTodo:Number(id)}))
+            
         }}>Repeat Task</button> : <></>}
         <button className='bg-red-500 rounded-full my-2 p-4 text-white font-bold' onClick={()=>{
             dispatch(deleteTodo(id))
@@ -94,7 +104,7 @@ export default function ItemDetails (props: IItemDetailsProps) {
 
 
 
-      </div>
+      </motion.div>
     </div>
   );
 }

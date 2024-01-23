@@ -13,6 +13,7 @@ import {  editTodo } from "../redux/features/todoSlice";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 import TagListCard from "../components/checkListCard/TagListCard";
+import { motion} from "framer-motion";
 
 export interface IEditTaskProps {}
 
@@ -286,7 +287,9 @@ export default function EditTask(props: IEditTaskProps) {
   return (
     <div className="w-full flex h-auto p-10 justify-center  bg-gray-200">
       {/* Content */}
-      <div className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col ">
+      <motion.div 
+      className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col " 
+      initial={{ x: 300 }} animate={{ x: 0 }} transition={{ duration: 0.6, type: "spring"}}>
         {/* Title */}
         <div className="flex justify-center items-center relative w-full">
           <h1 className="title text-[28px] font-medium">Edit Task</h1>
@@ -434,7 +437,7 @@ export default function EditTask(props: IEditTaskProps) {
             Save Task
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

@@ -13,6 +13,7 @@ import { addTodo } from "../redux/features/todoSlice";
 import dayjs from 'dayjs';
 import { useNavigate } from "react-router-dom";
 import TagListCard from "../components/checkListCard/TagListCard";
+import { motion} from "framer-motion";
 
 
 export interface IAddTaskProps {}
@@ -301,12 +302,21 @@ export default function AddTask(props: IAddTaskProps) {
 
 
       {/* Content */}
-      <div className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col ">
+      <motion.div 
+      className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col "
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        duration: 0.6,
+        delay: 0.3,
+        ease: [0, 0.71, 0.2, 1.01]
+      }}
+      >
         {/* Title */}
         <div className="flex justify-center items-center relative w-full">
           <h1 className="title text-[28px] font-medium">Add New Task</h1>
 
-          <ArrowBackIcon className=" absolute left-0 text-[30px]" />
+          <ArrowBackIcon className=" absolute left-0 text-[30px]" onClick={()=>navigate(-1)}/>
         </div>
 
         {/* Name */}
@@ -433,7 +443,7 @@ export default function AddTask(props: IAddTaskProps) {
 
 
 
-      </div>
+      </motion.div>
 
 
 

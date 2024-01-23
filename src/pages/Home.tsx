@@ -13,9 +13,8 @@ import { FormControl, RadioGroup, Radio, FormControlLabel } from "@mui/material"
 import dayjs from "dayjs";
 import advancedFormat from "dayjs/plugin/advancedFormat";
 import { setFilteredTags } from "../redux/features/todoSlice";
+import { motion } from "framer-motion";
 dayjs.extend(advancedFormat);
-
-export interface IHomeProps {}
 
 interface Todo {
   title: string;
@@ -35,7 +34,7 @@ interface Sort {
   arrayTodos: Array<Todo>;
 }
 
-export default function Home(props: IHomeProps) {
+export default function Home() {
   // Redux States
   const { todos, filterTags } = UseSelector((state) => state.todo);
   let copyTodo = todos.slice();
@@ -95,58 +94,55 @@ export default function Home(props: IHomeProps) {
     }
   }
 
- function filterAndReturn(array:Array<any>,value:string){
-    // Struggled with this 
+  function filterAndReturn(array: Array<any>, value: string) {
+    // Struggled with this
     //* I decided to loop over my array ... then loop over the tag list array ... all in the same filter function
-    // This allowed me to me to compare my filterState to every tag list in every todo in my array 
-    //* If there was a match we returned true ... meaning we found todos with the mathcing tag 
-    let res = array.filter(item => {
-        for(let data of item.tagList){
-          if(data.toLowerCase() === value.toLowerCase()){
-            return true
-          }
+    // This allowed me to me to compare my filterState to every tag list in every todo in my array
+    //* If there was a match we returned true ... meaning we found todos with the mathcing tag
+    let res = array.filter((item) => {
+      for (let data of item.tagList) {
+        if (data.toLowerCase() === value.toLowerCase()) {
+          return true;
         }
-        return false
-      })
-      return res
- }
+      }
+      return false;
+    });
+    return res;
+  }
 
   function handleFilterAndSort(array: Array<any>, sortStateKey: string, filterStateKey: string) {
-
     // If theres no filterState or sortState we simply return our array untouched
-    if(!sortStateKey?.length && !filterStateKey?.length){
-        return array
+    if (!sortStateKey?.length && !filterStateKey?.length) {
+      return array;
     }
 
     // There is a filterState and sortState we first set a variable that contains our filtered array
-    //* Then we send our filtered array to our sort switch case that handles our sorting 
+    //* Then we send our filtered array to our sort switch case that handles our sorting
     // Then we return
-    if(sortStateKey && filterStateKey){
-        let data = filterAndReturn(array,filterState)
-        return sortSwitchCase({arrayTodos:data,state:sortStateKey})
+    if (sortStateKey && filterStateKey) {
+      let data = filterAndReturn(array, filterState);
+      return sortSwitchCase({ arrayTodos: data, state: sortStateKey });
     }
 
     // If we only have a filterState we just return an array of the filterd data
-    if(filterStateKey){
-        return filterAndReturn(array,filterStateKey)
+    if (filterStateKey) {
+      return filterAndReturn(array, filterStateKey);
     }
-    
-   // If we only have a sortState we just return an aray of our sorted data
-    if(sortStateKey?.length){
-      return  sortSwitchCase({arrayTodos:array,state:sortStateKey})
+
+    // If we only have a sortState we just return an aray of our sorted data
+    if (sortStateKey?.length) {
+      return sortSwitchCase({ arrayTodos: array, state: sortStateKey });
     }
   }
 
-  
   // This react useEffect dynamically updates my filter state array ... if the power switch is on we send the filtered array to my redux ... if its not on we send over our full list
   React.useEffect(() => {
-    if(powerOnAndOff){
-        dispatch(setFilteredTags(copyTodo.filter((val) => val.isDone !== false)));
-    }else{
-        dispatch(setFilteredTags(copyTodo));
+    if (powerOnAndOff) {
+      dispatch(setFilteredTags(copyTodo.filter((val) => val.isDone !== false)));
+    } else {
+      dispatch(setFilteredTags(copyTodo));
     }
-  }, [todos,powerOnAndOff]);// eslint-disable-line
-
+  }, [todos, powerOnAndOff]); // eslint-disable-line
 
   return (
     <div className="w-full min-h-screen flex p-10 justify-center items-center bg-gray-200">
@@ -167,7 +163,16 @@ export default function Home(props: IHomeProps) {
               {handleOpenSort ? <KeyboardArrowUpIcon className=" mr-2" /> : <KeyboardArrowDownIcon className=" mr-2" />}
 
               {handleOpenSort && (
-                <div className=" absolute  top-[45px] w-full rounded-2xl p-4 border border-gray-400 bg-white boxShadow z-10">
+                <motion.div
+                  className=" absolute  top-[45px] w-full rounded-2xl p-4 border border-gray-400 bg-white boxShadow z-10"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.1,
+                    ease: [0, 0.71, 0.2, 1.01],
+                  }}
+                >
                   <FormControl>
                     <RadioGroup
                       name="controlled-radio-buttons-group"
@@ -190,7 +195,7 @@ export default function Home(props: IHomeProps) {
                       ))}
                     </RadioGroup>
                   </FormControl>
-                </div>
+                </motion.div>
               )}
             </div>
 
@@ -198,7 +203,16 @@ export default function Home(props: IHomeProps) {
               <h1 className="text-[15px] ml-2">{filterState?.length ? `Category: ${filterState}` : `Category`}</h1>
               {handleOpenCategory ? <KeyboardArrowUpIcon className=" mr-2" /> : <KeyboardArrowDownIcon className=" mr-2" />}
               {handleOpenCategory && (
-                <div className=" absolute  top-[45px] w-full rounded-2xl p-4 border border-gray-400 bg-white boxShadow z-10">
+                <motion.div 
+                className=" absolute  top-[45px] w-full rounded-2xl p-4 border border-gray-400 bg-white boxShadow z-10"
+                initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.1,
+                    ease: [0, 0.71, 0.2, 1.01],
+                  }}
+                >
                   <FormControl>
                     <RadioGroup
                       name="controlled-radio-buttons-group"
@@ -221,7 +235,7 @@ export default function Home(props: IHomeProps) {
                       ))}
                     </RadioGroup>
                   </FormControl>
-                </div>
+                </motion.div>
               )}
             </div>
           </div>
@@ -272,8 +286,10 @@ export default function Home(props: IHomeProps) {
         {/* Mapped Data */}
         <div className="w-full h-auto flex flex-col">
           {powerOnAndOff
-            ? handleFilterAndSort(copyTodo,sortState,filterState)?.filter((val) => val.isDone !== false).map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)
-            : handleFilterAndSort(copyTodo,sortState,filterState)?.map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)}
+            ? handleFilterAndSort(copyTodo, sortState, filterState)
+                ?.filter((val) => val.isDone !== false)
+                .map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)
+            : handleFilterAndSort(copyTodo, sortState, filterState)?.map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)}
         </div>
 
         {/* Add Task */}
@@ -285,7 +301,3 @@ export default function Home(props: IHomeProps) {
     </div>
   );
 }
-
-// {powerOnAndOff
-//     ? todos?.filter((val) => val.isDone !== false).map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)
-//     : todos?.map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)}

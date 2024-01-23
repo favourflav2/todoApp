@@ -13,6 +13,7 @@ import { Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { Dispatch } from "../../redux/store";
 import { completeTask } from "../../redux/features/todoSlice";
+import { motion } from "framer-motion";
 
 export interface IItemDetailsTodoCardProps {
   item: {
@@ -87,7 +88,7 @@ export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardPr
     );
   }
   return (
-    <div className="w-full flex flex-col h-auto rounded-2xl bg-white p-4 my-3 border border-gray-200 relative">
+    <motion.div className="w-full flex flex-col h-auto rounded-2xl bg-white p-4 my-3 border border-gray-200 relative" initial={{ x: 300 }} animate={{ x: 0 }} transition={{ duration: 0.2, type: "spring"}}>
       {/* 1st Row */}
       <div className=" w-full flex items-center justify-between mb-3">
         {/* Left Side Title */}
@@ -148,6 +149,6 @@ export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardPr
       <div className=" absolute right-[16px] bottom-1">
         <CircularProgressWithLabel value={isNaN(getPercentages(item?.checkList)) ? 0 : getPercentages(item?.checkList)} />
       </div>
-    </div>
+    </motion.div>
   );
 }
