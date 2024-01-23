@@ -43,6 +43,9 @@ export default function Home() {
   // naviagte
   const navigate = useNavigate();
 
+  // Search State
+  const [searchState, setSearchState] = React.useState("");
+
   // states for sort and category
   const [handleOpenSort, setHandleOpenSort] = React.useState(false);
   const [handleOpenCategory, setHandleOpenCategory] = React.useState(false);
@@ -62,6 +65,8 @@ export default function Home() {
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilterState((event.target as HTMLInputElement).value);
   };
+
+  const [popLayout, setPopLayout] = React.useState(false);
 
   function sortSwitchCase({ arrayTodos, state }: Sort) {
     switch (state) {
@@ -110,10 +115,46 @@ export default function Home() {
     return res;
   }
 
-  function handleFilterAndSort(array: Array<any>, sortStateKey: string, filterStateKey: string) {
-    // If theres no filterState or sortState we simply return our array untouched
-    if (!sortStateKey?.length && !filterStateKey?.length) {
+  function handleSearch(array: Array<any>, searchVal: string) {
+    if (searchVal) {
+      return array.filter((item) => item.title.toLowerCase().includes(searchVal.toLowerCase()));
+    }
+  }
+
+  function handleFilterAndSort(array: Array<any>, sortStateKey: string, filterStateKey: string, search: string) {
+    // If theres no filterState, sortState, or search state we simply return our array untouched
+    if (!sortStateKey?.length && !filterStateKey?.length && !search) {
       return array;
+    }
+
+    if (search && sortStateKey && filterStateKey) {
+      let searchedData = handleSearch(array, search);
+
+      // If our search filter has length
+      if (searchedData?.length) {
+        let filter = filterAndReturn(searchedData, filterState);
+        return sortSwitchCase({ arrayTodos: filter, state: sortStateKey });
+      }
+    }
+
+    if (search && sortStateKey) {
+      let data = handleSearch(array, search);
+
+      if (data?.length) {
+        return sortSwitchCase({ arrayTodos: data, state: sortStateKey });
+      }
+    }
+
+    if (search && filterStateKey) {
+      let data = handleSearch(array, search);
+
+      if (data?.length) {
+        return filterAndReturn(data, filterState);
+      }
+    }
+
+    if (search) {
+      return handleSearch(array, search);
     }
 
     // There is a filterState and sortState we first set a variable that contains our filtered array
@@ -147,18 +188,30 @@ export default function Home() {
   return (
     <div className="w-full min-h-screen flex p-10 justify-center items-center bg-gray-200">
       {/* Content */}
-      <div className="main-content  w-[80%] min-h-[600px] flex flex-col items-center   ">
+      <div className="main-content  w-full md:w-[80%] xl:w-[50%] min-h-[600px] flex flex-col items-center   ">
         {/* Search Inputs & Sorting/Filtering */}
         <div className="w-full flex flex-col h-auto">
           <div className="searchBox w-full flex items-center  border border-gray-300 rounded-3xl bg-white ">
             <SearchIcon className="mx-2" />
-            <input type="text" placeholder="Search..." className=" outline-none w-full h-[50px] bg-inherit" />
+            <input
+              type="text"
+              placeholder="Search..."
+              className=" outline-none w-full h-[50px] bg-inherit"
+              onChange={(e) => {
+                setSearchState(e.target.value);
+                setPopLayout((item) => !item);
+              }}
+              value={searchState}
+            />
             <ArrowForwardIcon className="mx-2" />
           </div>
 
           {/* Sort & Category */}
-          <div className="sort-category w-full flex justify-between items-center mt-6 ">
-            <div className="sortBtn cursor-pointer flex items-center justify-between bg-white rounded-xl h-[40px] w-full mr-4 relative" onClick={() => setHandleOpenSort((item) => !item)}>
+          <div className="sort-category w-full flex flex-col sm:flex-row justify-between items-center mt-6 mb-2 sm:mb-0">
+            <div
+              className="sortBtn cursor-pointer flex items-center justify-between bg-white rounded-xl h-[40px] w-full sm:mr-4 mb-5 sm:mb-0 relative"
+              onClick={() => setHandleOpenSort((item) => !item)}
+            >
               <h1 className="text-[15px] ml-2">{sortState?.length ? `Sort: ${sortState}` : `Sort`}</h1>
               {handleOpenSort ? <KeyboardArrowUpIcon className=" mr-2" /> : <KeyboardArrowDownIcon className=" mr-2" />}
 
@@ -199,13 +252,13 @@ export default function Home() {
               )}
             </div>
 
-            <div className="categoryBtn cursor-pointer flex items-center justify-between bg-white rounded-xl h-[40px] w-full ml-4 relative" onClick={() => setHandleOpenCategory((item) => !item)}>
+            <div className="categoryBtn cursor-pointer flex items-center justify-between bg-white rounded-xl h-[40px] w-full sm:ml-4 relative" onClick={() => setHandleOpenCategory((item) => !item)}>
               <h1 className="text-[15px] ml-2">{filterState?.length ? `Category: ${filterState}` : `Category`}</h1>
               {handleOpenCategory ? <KeyboardArrowUpIcon className=" mr-2" /> : <KeyboardArrowDownIcon className=" mr-2" />}
               {handleOpenCategory && (
-                <motion.div 
-                className=" absolute  top-[45px] w-full rounded-2xl p-4 border border-gray-400 bg-white boxShadow z-10"
-                initial={{ opacity: 0, scale: 0.5 }}
+                <motion.div
+                  className=" absolute  top-[45px] w-full rounded-2xl p-4 border border-gray-400 bg-white boxShadow z-10"
+                  initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{
                     duration: 0.6,
@@ -241,11 +294,11 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="w-full flex items-center justify-center">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-center">
           {/* Clear Button */}
           {sortState.length ? (
             <button
-              className="my-8 bg-blue-400 rounded-full w-[140px] mx-2 py-4 text-white"
+              className="sm:my-8 my-2 bg-blue-400 rounded-full w-[140px] mx-2 py-4 text-white"
               onClick={() => {
                 setSortState("");
               }}
@@ -258,11 +311,11 @@ export default function Home() {
 
           {/* Power Button */}
           {powerOnAndOff ? (
-            <button className="my-8 bg-blue-400 rounded-full w-[140px] mx-2 py-4 text-white" onClick={() => setPowerOnAndOff((item) => !item)}>
+            <button className="sm:my-8 my-2 bg-blue-400 rounded-full w-[140px] mx-2 py-4 text-white" onClick={() => setPowerOnAndOff((item) => !item)}>
               <PowerIcon /> Power On
             </button>
           ) : (
-            <button className="my-8 bg-gray-400 rounded-full w-[140px] mx-2 py-4 text-white" onClick={() => setPowerOnAndOff((item) => !item)}>
+            <button className="sm:my-8 my-2 bg-gray-400 rounded-full w-[140px] mx-2 py-4 text-white" onClick={() => setPowerOnAndOff((item) => !item)}>
               <PowerOffIcon /> Power Off
             </button>
           )}
@@ -270,7 +323,7 @@ export default function Home() {
           {/* Clear Button */}
           {filterState?.length ? (
             <button
-              className="my-8 bg-blue-400 rounded-full w-[140px] mx-2 py-4 text-white"
+              className="sm:my-8 my-2 bg-blue-400 rounded-full w-[140px] mx-2 py-4 text-white"
               onClick={() => {
                 setFilterState("");
               }}
@@ -285,11 +338,47 @@ export default function Home() {
 
         {/* Mapped Data */}
         <div className="w-full h-auto flex flex-col">
-          {powerOnAndOff
-            ? handleFilterAndSort(copyTodo, sortState, filterState)
+          {powerOnAndOff ? (
+            handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.filter((val) => val.isDone !== false)?.length ? (
+              handleFilterAndSort(copyTodo, sortState, filterState, searchState)
                 ?.filter((val) => val.isDone !== false)
-                .map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)
-            : handleFilterAndSort(copyTodo, sortState, filterState)?.map((item: any, index: number) => <TodoCard item={item} key={index} id={index} />)}
+                ?.map((item: any, index: any) => <TodoCard item={item} key={index} id={index} popLayout={popLayout} />)
+            ) : (
+              <motion.div
+                className="w-full flex flex-col justify-center items-center my-10"
+                initial={{ x: 300, opacity: 0, scale: 0.2 }}
+                animate={{ x: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut", type: "spring" }}
+                exit={{ scale: 0.8, opacity: 0 }}
+              >
+                {filterState ? (
+                  <h1 className="text-[20px] font-bold">
+                    There are no Todos with the value of "{searchState}" and Category of "{filterState}"
+                  </h1>
+                ) : (
+                  <h1 className="text-[20px] font-bold">There are no Todos with the value of "{searchState}"</h1>
+                )}
+              </motion.div>
+            )
+          ) : handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.length ? (
+            handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.map((item: any, index: any) => <TodoCard item={item} key={index} id={index} popLayout={popLayout} />)
+          ) : (
+            <motion.div
+              className="w-full flex flex-col justify-center items-center my-10"
+              initial={{ x: 300, opacity: 0, scale: 0.2 }}
+              animate={{ x: 0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut", type: "spring" }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              {filterState ? (
+                <h1 className="text-[20px] font-bold">
+                  There are no Todos with the value of "{searchState}" and Category of "{filterState}"
+                </h1>
+              ) : (
+                <h1 className="text-[20px] font-bold">There are no Todos with the value of "{searchState}"</h1>
+              )}
+            </motion.div>
+          )}
         </div>
 
         {/* Add Task */}

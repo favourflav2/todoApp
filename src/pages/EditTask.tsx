@@ -9,32 +9,30 @@ import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import AddIcon from "@mui/icons-material/Add";
 import CheckListCard from "../components/checkListCard/CheckListCard";
 import { Dispatch, UseSelector } from "../redux/store";
-import {  editTodo } from "../redux/features/todoSlice";
+import { editTodo } from "../redux/features/todoSlice";
 import dayjs from "dayjs";
 import { useNavigate, useParams } from "react-router-dom";
 import TagListCard from "../components/checkListCard/TagListCard";
-import { motion} from "framer-motion";
+import { motion } from "framer-motion";
 
-export interface IEditTaskProps {}
+
 
 interface Todo {
-    title: string;
-    date: string;
-    time: string;
-    priority: number;
-    complexity: number;
-    percentage: any;
-    checkList: Array<any>;
-    tagList: Array<number | string>;
-    fullDate:string;
-    isDone: boolean;
-    createdAt: string;
+  title: string;
+  date: string;
+  time: string;
+  priority: number;
+  complexity: number;
+  percentage: any;
+  checkList: Array<any>;
+  tagList: Array<number | string>;
+  fullDate: string;
+  isDone: boolean;
+  createdAt: string;
 }
 
-export default function EditTask(props: IEditTaskProps) {
+export default function EditTask() {
   let oneThorughTen = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-  
 
   // Redux State
   const { todos } = UseSelector((state) => state.todo);
@@ -42,8 +40,6 @@ export default function EditTask(props: IEditTaskProps) {
   const { id } = useParams();
   const data = todos.find((item, index) => Number(index) === Number(id));
   const navigate = useNavigate();
-
-
 
   // state for typing
   const [textState, setTextState] = React.useState({
@@ -186,8 +182,8 @@ export default function EditTask(props: IEditTaskProps) {
     }
   }
 
-  let newDate = dayjs(dateData).format('MM/DD/YYYY')
-  let newTime = dayjs(timeData).format('hh:mm a')
+  let newDate = dayjs(dateData).format("MM/DD/YYYY");
+  let newTime = dayjs(timeData).format("hh:mm a");
 
   // Obj Todo Pushed into Array
   const todoObj: Todo = {
@@ -201,7 +197,7 @@ export default function EditTask(props: IEditTaskProps) {
     tagList: addTagsList,
     fullDate: dateData && timeData ? dayjs(`${newDate} ${newTime}`).format() : "",
     isDone: data ? data.isDone : false,
-    createdAt: data ? data?.createdAt : ""
+    createdAt: data ? data?.createdAt : "",
   };
 
   // React useEffects
@@ -287,14 +283,17 @@ export default function EditTask(props: IEditTaskProps) {
   return (
     <div className="w-full flex h-auto p-10 justify-center  bg-gray-200">
       {/* Content */}
-      <motion.div 
-      className="main-content w-[80%] lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col " 
-      initial={{ x: 300 }} animate={{ x: 0 }} transition={{ duration: 0.6, type: "spring"}}>
+      <motion.div
+        className="main-content w-full lg:w-[50%] md:w-[60%] xl:w-[40%] 2xl:w-[30%] h-auto flex flex-col "
+        initial={{ x: 300 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.6, type: "spring" }}
+      >
         {/* Title */}
         <div className="flex justify-center items-center relative w-full">
           <h1 className="title text-[28px] font-medium">Edit Task</h1>
 
-          <ArrowBackIcon className=" absolute left-0 text-[30px] cursor-pointer" onClick={()=>navigate(-1)}/>
+          <ArrowBackIcon className=" absolute left-0 text-[30px] cursor-pointer" onClick={() => navigate(-1)} />
         </div>
 
         {/* Name */}
@@ -315,7 +314,9 @@ export default function EditTask(props: IEditTaskProps) {
           <h1 className={`font-medium text-[17px] ${errors.priority ? "text-red-500" : ""}`}>Select Priority Level</h1>
 
           {/* Mapped Data */}
-          <div className="flex items-center justify-between w-full h-auto mt-2">
+
+          {/* Desktop Div */}
+          <div className="sm:flex hidden items-center justify-between w-full h-auto mt-2">
             {oneThorughTen?.map((item: number, index: number) => (
               <div
                 key={index}
@@ -330,6 +331,24 @@ export default function EditTask(props: IEditTaskProps) {
               </div>
             ))}
           </div>
+
+          {/* Mobile Div */}
+          <div className="grid sm:hidden grid-cols-5  justify-center items-center w-full h-auto mt-2 gap-4">
+            {oneThorughTen?.map((item: number, index: number) => (
+              <div
+                key={index}
+                className={` ${priorityState === index + 1 ? "bg-blue-500 text-white" : "bg-blue-300"} cursor-pointer bg-blue-200 flex justify-center items-center rounded-full  h-[35px]`}
+                onClick={() => {
+                  if (index + 1 === item) {
+                    setPriority(item);
+                  }
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+
           {errors.priority && <p className="ml-2 text-[11px] mt-1 text-red-500">Please Select A Number</p>}
         </div>
 
@@ -338,7 +357,9 @@ export default function EditTask(props: IEditTaskProps) {
           <h1 className={`font-medium text-[17px] ${errors.complexity ? "text-red-500" : ""}`}>Select Complexity Level</h1>
 
           {/* Mapped Data */}
-          <div className="flex items-center justify-between w-full h-auto mt-2">
+
+          {/* Desktop Div */}
+          <div className="sm:flex hidden items-center justify-between w-full h-auto mt-2">
             {oneThorughTen?.map((item: number, index: number) => (
               <div
                 key={index}
@@ -353,13 +374,30 @@ export default function EditTask(props: IEditTaskProps) {
               </div>
             ))}
           </div>
+
+          {/* Mobile Div */}
+          <div className="grid sm:hidden grid-cols-5  justify-center items-center w-full h-auto mt-2 gap-4">
+            {oneThorughTen?.map((item: number, index: number) => (
+              <div
+                key={index}
+                className={` ${complexityState === index + 1 ? "bg-blue-500 text-white" : "bg-blue-300"} cursor-pointer flex justify-center items-center rounded-full  h-[35px]`}
+                onClick={() => {
+                  if (index + 1 === item) {
+                    setComplexity(item);
+                  }
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
           {errors.complexity && <p className="ml-2 text-[11px] mt-1 text-red-500">Please Select A Number</p>}
         </div>
 
         {/* Date and Time */}
-        <div className="w-full flex items-center justify-between mt-8">
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between mt-8">
           {/* Date */}
-          <div className="w-full h-auto flex flex-col mr-4">
+          <div className="w-full h-auto flex flex-col sm:mr-4 sm:mb-0 mb-4">
             <h1>Select Due Date</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
@@ -370,7 +408,7 @@ export default function EditTask(props: IEditTaskProps) {
           </div>
 
           {/* Time */}
-          <div className="w-full h-auto flex flex-col ml-4">
+          <div className="w-full h-auto flex flex-col sm:ml-4">
             <h1>Select Time</h1>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["TimePicker"]}>
@@ -430,10 +468,7 @@ export default function EditTask(props: IEditTaskProps) {
         </div>
 
         <div className="w-full flex justify-center items-center mb-[50px]">
-          <button
-            className="mt-8 w-[50%] h-[45px] bg-blue-400 rounded-full "
-            onClick={editArrayTodo}
-          >
+          <button className="mt-8 w-[50%] h-[45px] bg-blue-400 rounded-full " onClick={editArrayTodo}>
             Save Task
           </button>
         </div>
