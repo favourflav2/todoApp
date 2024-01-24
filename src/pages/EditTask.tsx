@@ -38,7 +38,7 @@ export default function EditTask() {
   const { todos } = UseSelector((state) => state.todo);
   const dispatch = Dispatch();
   const { id } = useParams();
-  const data = todos.find((item, index) => Number(index) === Number(id));
+  const data = todos.find((item, index) => item.createdAt === id);
   const navigate = useNavigate();
 
   // state for typing

@@ -107,7 +107,7 @@ export default function TodosCard({ item, id,popLayout }: ITodoCardProps) {
 
           {/* Right Side */}
           <div className="w-full flex items-center justify-end">
-            <EditNoteIcon className="mr-2 sm:text-[30px] text-[27px] text-gray-500 " onClick={() => navigate(`/editTask/${id}`)} />
+            <EditNoteIcon className="mr-2 sm:text-[30px] text-[27px] text-gray-500 " onClick={() => navigate(`/editTask/${item.createdAt}`)} />
             <CheckCircleIcon
               className={`mr-2 sm:text-[30px] text-[27px] ${item?.isDone ? "text-blue-400" : "text-gray-500"}`}
               onClick={() => {
@@ -122,7 +122,7 @@ export default function TodosCard({ item, id,popLayout }: ITodoCardProps) {
           <div
             className="w-full flex flex-col h-auto "
             onClick={() => {
-              navigate(`/item/${id}`);
+              navigate(`/item/${item.createdAt}`);
             }}
           >
             <div className="w-full flex items-center my-1">
@@ -162,7 +162,7 @@ export default function TodosCard({ item, id,popLayout }: ITodoCardProps) {
           <div
             className="w-full flex items-center my-1"
             onClick={() => {
-              navigate(`/item/${id}`);
+              navigate(`/item/${item.createdAt}`);
             }}
           >
             {item?.tagList?.map((item: any, index: number) => (
@@ -177,7 +177,7 @@ export default function TodosCard({ item, id,popLayout }: ITodoCardProps) {
           <div
             className=" absolute right-[16px] bottom-1"
             onClick={() => {
-              navigate(`/item/${id}`);
+              navigate(`/item/${item.createdAt}`);
             }}
           >
             <CircularProgressWithLabel value={isNaN(getPercentages(item?.checkList)) ? 0 : getPercentages(item?.checkList)} />

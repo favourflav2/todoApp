@@ -14,8 +14,9 @@ export default function ItemDetails() {
   const { todos } = UseSelector((state) => state.todo);
   const dispatch = Dispatch();
   const { id } = useParams();
-  const data = todos.find((item, index) => Number(index) === Number(id));
+  const data = todos.find((item, index) => item.createdAt === id);
   const navigate = useNavigate();
+  
 
   return (
     <div className="w-full min-h-screen bg-gray-200 flex justify-center p-10">
@@ -48,14 +49,14 @@ export default function ItemDetails() {
                   <CheckBoxIcon
                     className="text-blue-400"
                     onClick={() => {
-                      dispatch(checkOffTodo({ item: item, index, idOfTodo: Number(id) }));
+                      dispatch(checkOffTodo({ item: item, id, indexOfChecklist:index }));
                     }}
                   />
                 ) : (
                   <CheckBoxOutlineBlankIcon
                     className="text-blue-400"
                     onClick={() => {
-                      dispatch(checkOffTodo({ item: item, index, idOfTodo: Number(id) }));
+                      dispatch(checkOffTodo({ item: item, id,indexOfChecklist:index }));
                     }}
                   />
                 )}
@@ -72,7 +73,7 @@ export default function ItemDetails() {
             <button
               className="bg-blue-500 rounded-full my-2 p-4 text-white font-bold"
               onClick={() => {
-                dispatch(resetCheckOffTodo({ item: data?.checkList, idOfTodo: Number(id) }));
+                dispatch(resetCheckOffTodo({ item: data?.checkList, id }));
               }}
             >
               Repeat Task

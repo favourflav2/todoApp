@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 
 export interface Todo {
   title: string;
@@ -32,13 +32,20 @@ const todoSlice = createSlice({
       state.todos = [...state.todos, action.payload];
     },
     checkOffTodo: (state, action) => {
-      let arrayCheckList = state.todos.find((item, index) => index === action.payload.idOfTodo)?.checkList;
-      //let look = state.todos.find((item,index)=> index === action.payload.idOfTodo)
-      let index = state.todos.findIndex((item, index) => index === action.payload.idOfTodo);
+        
+        // This is the array in the specific todo that contains the checklist items
+        let arrayCheckList = state.todos.find((item) => item.createdAt === action.payload.id)?.checkList;
 
+        // This is the index of the item we want to update/check off and on
+        let index = state.todos.findIndex((item) => item.createdAt === action.payload.id);
+        
+
+        // We loop the array in which the checklist are ... if the index of the item in the checklist array matches the index in which we click 
+        //* We return the opposite of that value
+        // If theres no match we return the object as is
       if (arrayCheckList) {
         let newObj = arrayCheckList?.map((item, index) => {
-          if (index === action.payload.index) {
+          if (index === action.payload.indexOfChecklist) {
             return {
               ...item,
               completed: !item.completed,
@@ -49,34 +56,29 @@ const todoSlice = createSlice({
             };
           }
         });
-
-        //console.log((index))
-        // console.log(current(look))
-        //console.log(newObj,"mapped data")
-        //console.log(newObj)
-
-        //console.log(current(state.todos[index].checkList))
-
-        state.todos[index].checkList = newObj;
-      }
+        
+        // Our todos array at the postiion index ... we replace that array with our updated array
+         state.todos[index].checkList = newObj;
+       }
     },
     deleteTodo: (state, action) => {
-      state.todos = state.todos.filter((item, index) => index !== Number(action.payload));
+      state.todos = state.todos.filter((item) => item.createdAt !== action.payload);
     },
     resetCheckOffTodo: (state, action) => {
-      let whatToUpdate = action.payload.item;
-      let updatedItem = whatToUpdate?.map((item: any) => {
-        return {
-          ...item,
-          completed: false,
-        };
-      });
+       let whatToUpdate = action.payload.item;
+       const index = state.todos.findIndex(item => item.createdAt === action.payload.id)
+       let updatedItem = whatToUpdate?.map((item: any) => {
+         return {
+           ...item,
+           completed: false,
+         };
+       });
 
-      state.todos[action.payload.idOfTodo].checkList = updatedItem;
+      state.todos[index].checkList = updatedItem;
     },
     editTodo: (state, action) => {
-      //console.log(action.payload)
-      state.todos[action.payload.id] = action.payload.data;
+      const index = state.todos.findIndex(item => item.createdAt === action.payload.id)
+      state.todos[index] = action.payload.data;
     },
     completeTask: (state, action) => {
       let { item } = action.payload;
