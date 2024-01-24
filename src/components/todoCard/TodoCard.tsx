@@ -31,7 +31,7 @@ export interface ITodoCardProps {
   popLayout: boolean
 }
 
-export default function TodosCard({ item, id,popLayout }: ITodoCardProps) {
+export default function TodosCard({ item,popLayout }: ITodoCardProps) {
   // Redux States
   const navigate = useNavigate();
   const dispatch = Dispatch();
@@ -111,7 +111,7 @@ export default function TodosCard({ item, id,popLayout }: ITodoCardProps) {
             <CheckCircleIcon
               className={`mr-2 sm:text-[30px] text-[27px] ${item?.isDone ? "text-blue-400" : "text-gray-500"}`}
               onClick={() => {
-                dispatch(completeTask({ item, id }));
+                dispatch(completeTask({ item }));
               }}
             />
           </div>

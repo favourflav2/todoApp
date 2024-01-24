@@ -31,7 +31,7 @@ export interface IItemDetailsTodoCardProps {
   id: number;
 }
 
-export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardProps) {
+export default function ItemDetailsTodoCard({ item }: IItemDetailsTodoCardProps) {
 
     const navigate = useNavigate()
     const dispatch = Dispatch()
@@ -99,8 +99,8 @@ export default function ItemDetailsTodoCard({ item, id }: IItemDetailsTodoCardPr
 
         {/* Right Side */}
         <div className="w-full flex items-center justify-end">
-          <EditNoteIcon className="mr-2 text-[30px] text-gray-500" onClick={()=>navigate(`/editTask/${id}`)}/>
-          <CheckCircleIcon className={`mr-2 text-[30px] ${item?.isDone ? 'text-blue-400': 'text-gray-500'}`} onClick={()=>dispatch(completeTask({item,id}))} />
+          <EditNoteIcon className="mr-2 text-[30px] text-gray-500" onClick={()=>navigate(`/editTask/${item.createdAt}`)}/>
+          <CheckCircleIcon className={`mr-2 text-[30px] ${item?.isDone ? 'text-blue-400': 'text-gray-500'}`} onClick={()=>dispatch(completeTask({item}))} />
         </div>
       </div>
 
