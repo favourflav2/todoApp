@@ -337,15 +337,34 @@ export default function Home() {
         </div>
 
         {/* Mapped Data */}
-        {
-            todos?.length ? 
-            (
-<div className="w-full h-auto flex flex-col">
-          {powerOnAndOff ? (
-            handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.filter((val) => val.isDone !== false)?.length ? (
-              handleFilterAndSort(copyTodo, sortState, filterState, searchState)
-                ?.filter((val) => val.isDone !== false)
-                ?.map((item: any, index: any) => <TodoCard item={item} key={index} id={index} popLayout={popLayout} />)
+        {todos?.length ? (
+          <div className="w-full h-auto flex flex-col">
+            {powerOnAndOff ? (
+              handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.filter((val) => val.isDone !== false)?.length ? (
+                handleFilterAndSort(copyTodo, sortState, filterState, searchState)
+                  ?.filter((val) => val.isDone !== false)
+                  ?.map((item: any, index: any) => <TodoCard item={item} key={index} id={index} popLayout={popLayout} />)
+              ) : (
+                <motion.div
+                  className="w-full flex flex-col justify-center items-center my-10"
+                  initial={{ x: 300, opacity: 0, scale: 0.2 }}
+                  animate={{ x: 0, opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, ease: "easeOut", type: "spring" }}
+                  exit={{ scale: 0.8, opacity: 0 }}
+                >
+                  {filterState ? (
+                    <h1 className="text-[20px] font-bold">
+                      There are no Todos with the value of "{searchState}" and Category of "{filterState}"
+                    </h1>
+                  ) : searchState ? (
+                    <h1 className="text-[20px] font-bold">There are no Todos with the value of "{searchState}"</h1>
+                  ) : (
+                    <h1 className="text-[20px] font-bold">There are no Todos that have been completed</h1>
+                  )}
+                </motion.div>
+              )
+            ) : handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.length ? (
+              handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.map((item: any, index: any) => <TodoCard item={item} key={index} id={index} popLayout={popLayout} />)
             ) : (
               <motion.div
                 className="w-full flex flex-col justify-center items-center my-10"
@@ -362,41 +381,19 @@ export default function Home() {
                   <h1 className="text-[20px] font-bold">There are no Todos with the value of "{searchState}"</h1>
                 )}
               </motion.div>
-            )
-          ) : handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.length ? (
-            handleFilterAndSort(copyTodo, sortState, filterState, searchState)?.map((item: any, index: any) => <TodoCard item={item} key={index} id={index} popLayout={popLayout} />)
-          ) : (
-            <motion.div
-              className="w-full flex flex-col justify-center items-center my-10"
-              initial={{ x: 300, opacity: 0, scale: 0.2 }}
-              animate={{ x: 0, opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut", type: "spring" }}
-              exit={{ scale: 0.8, opacity: 0 }}
-            >
-              {filterState ? (
-                <h1 className="text-[20px] font-bold">
-                  There are no Todos with the value of "{searchState}" and Category of "{filterState}"
-                </h1>
-              ) : (
-                <h1 className="text-[20px] font-bold">There are no Todos with the value of "{searchState}"</h1>
-              )}
-            </motion.div>
-          )}
-        </div>
-            ) 
-            : 
-            (
-                <motion.div
-              className="w-full flex flex-col justify-center items-center my-10"
-              initial={{ x: 300, opacity: 0, scale: 0.2 }}
-              animate={{ x: 0, opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut", type: "spring" }}
-              exit={{ scale: 0.8, opacity: 0 }}
-            >
-              <h1 className="font-bold text-[18px]">You currenlty dont't have any todos</h1>
-            </motion.div>
-            )
-        }
+            )}
+          </div>
+        ) : (
+          <motion.div
+            className="w-full flex flex-col justify-center items-center my-10"
+            initial={{ x: 300, opacity: 0, scale: 0.2 }}
+            animate={{ x: 0, opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: "easeOut", type: "spring" }}
+            exit={{ scale: 0.8, opacity: 0 }}
+          >
+            <h1 className="font-bold text-[18px]">You currenlty dont't have any todos</h1>
+          </motion.div>
+        )}
 
         {/* Add Task */}
         <div className="addTaskBtn cursor-pointer px-3 py-4 text-white bg-blue-400 flex items-center justify-around w-[150px] my-5 rounded-3xl" onClick={() => navigate("/addTask")}>
