@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 export interface Todo {
   title: string;
@@ -81,17 +81,15 @@ const todoSlice = createSlice({
       state.todos[index] = action.payload.data;
     },
     completeTask: (state, action) => {
-      let { item } = action.payload;
-      let copyData = state.todos.map(val => {
+      const { item } = action.payload;
+      const copyData = state.todos.map(val => {
         if(val.createdAt === item.createdAt){
             return {
                 ...val,
                 isDone: !val.isDone
             }
         }else{
-            return {
-                ...val
-            }
+            return val
         }
       })
       
@@ -99,15 +97,17 @@ const todoSlice = createSlice({
       state.todos = copyData
     },
     setFilteredTags: (state,action) => {
-      let copyData = action.payload.slice();
-      let newArr = copyData.map((item:any) => item.tagList);
+      const copyData = action.payload.slice();
+      const newArr = copyData.map((item:any) => item.tagList);
 
-      let res = ([] as any[]).concat(...newArr);
+      const res = ([] as any[]).concat(...newArr);
 
       // I had to map over the data and make everything lower case ... because a user could type the same tag ... it allowed for different cased dupilicates
       // TODO example GooD and Good would exsist in the array
       //* So I lowercased everything ... then removed the dupilcates ... then took the first Letter in the string and uppercased it ... getting everything back to their orginal form
-      let caseSensitveResult = res.map(item => item.toLowerCase()).filter((value, index, array) => array.indexOf(value) === index).map(item => `${item.slice(0,1).toUpperCase() + item.slice(1,item.length)}`)
+      const caseSensitveResult = res.map(item => item.toLowerCase())
+      .filter((value, index, array) => array.indexOf(value) === index)
+      .map(item => `${item.slice(0,1).toUpperCase() + item.slice(1,item.length)}`)
      
 
       state.filterTags = caseSensitveResult
