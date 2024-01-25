@@ -107,7 +107,7 @@ export default function TodosCard({ item,popLayout }: ITodoCardProps) {
 
           {/* Right Side */}
           <div className="w-full flex items-center justify-end">
-            <EditNoteIcon className="mr-2 sm:text-[30px] text-[27px] text-gray-500 " onClick={() => navigate(`/editTask/${item.createdAt}`)} />
+            <EditNoteIcon className="mr-2 sm:text-[30px] text-[27px] text-gray-500 " onClick={() => navigate(`/addTask/editTask/${item.createdAt}`)} />
             <CheckCircleIcon
               className={`mr-2 sm:text-[30px] text-[27px] ${item?.isDone ? "text-blue-400" : "text-gray-500"}`}
               onClick={() => {

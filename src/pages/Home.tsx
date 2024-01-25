@@ -396,7 +396,7 @@ export default function Home() {
         )}
 
         {/* Add Task */}
-        <div className="addTaskBtn cursor-pointer px-3 py-4 text-white bg-blue-400 flex items-center justify-around w-[150px] my-5 rounded-3xl" onClick={() => navigate("/addTask")}>
+        <div className="addTaskBtn cursor-pointer px-3 py-4 text-white bg-blue-400 flex items-center justify-around w-[150px] my-5 rounded-3xl" onClick={() => navigate("/addTask/editTask/noId")}>
           <AddIcon />
           <h1>Add Task</h1>
         </div>

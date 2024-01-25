@@ -26,7 +26,7 @@ export default function ItemDetails() {
         <div className="flex items-center justify-between w-full">
           <ArrowBackIcon className="text-[28px]" onClick={() => navigate(-1)} />
           <h1 className="title text-[28px] font-medium">Task Details</h1>
-          <EditNoteIcon className="text-[28px]" onClick={() => navigate(`/editTask/${id}`)} />
+          <EditNoteIcon className="text-[28px]" onClick={() => navigate(`/addTask/editTask/${id}`)} />
         </div>
 
         {/* Todo Card */}

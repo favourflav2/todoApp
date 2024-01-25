@@ -21,3 +21,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# ignore some pages I want to keep just incase I have a bug
+/src/pages/AddTask.tsx
+/src/pages/EditTask.tsx
